@@ -34,7 +34,11 @@ namespace day03
             String leftItems = line.Substring(0, itemsPerCompartment);
             String rightItems = line.Substring(itemsPerCompartment, itemsPerCompartment);
 
-            char match = FindMatchingItem(leftItems, rightItems);
+            String matches = FindMatchingItems(leftItems, rightItems);
+            char match = matches[0];
+
+            Console.WriteLine(matches);
+            // char match = FindMatchingItem(leftItems, rightItems);
             long priority = priorityOfMatchingItem(match);
 
             priorityOfMatchingItems += priority;
@@ -42,15 +46,18 @@ namespace day03
             return priorityOfMatchingItems;
         }
 
-        static char FindMatchingItem(String left, String right)
+
+        static String FindMatchingItems(String first, String second)
         {
-            HashSet<char> leftHash = new HashSet<char>(left);
-            foreach(char c in right.ToCharArray())
+            HashSet<char> matches = new HashSet<char>(); ;
+
+            HashSet<char> hash = new HashSet<char>(first);
+            foreach(char c in second.ToCharArray())
             {
-                if (leftHash.Contains(c)) return c;
+                if (hash.Contains(c)) matches.Add(c);
             }
 
-            return ' ';
+            return String.Join("", matches);
         }
 
         static long priorityOfMatchingItem(char c)
