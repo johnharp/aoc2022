@@ -15,19 +15,25 @@ namespace day03
         static void Solve(String[] lines)
         {
             long totalOfPriorities = 0;
+            long totalOfGroupPriorities = 0;
 
             foreach(var line in lines)
             {
                 totalOfPriorities += SolveLine(line);
             }
 
+            for (int i = 0; i < lines.Length/3; i++)
+            {
+                totalOfGroupPriorities += SolveGroup(lines[i*3], lines[i*3 + 1], lines[i*3 + 2]);
+            }
+
             Console.WriteLine($"Total priority of matching items: {totalOfPriorities}");
+            Console.WriteLine($"Total priority of groups: {totalOfGroupPriorities}");
+
         }
 
         static long SolveLine(String line)
         {
-            long priorityOfMatchingItems = 0;
-
             int numItems = line.Length;
             int itemsPerCompartment = numItems / 2;
 
@@ -37,13 +43,20 @@ namespace day03
             String matches = FindMatchingItems(leftItems, rightItems);
             char match = matches[0];
 
-            Console.WriteLine(matches);
-            // char match = FindMatchingItem(leftItems, rightItems);
             long priority = priorityOfMatchingItem(match);
 
-            priorityOfMatchingItems += priority;
+            return priority;
+        }
 
-            return priorityOfMatchingItems;
+        public static long SolveGroup(String first, String second, String third)
+        {
+            String firstAndSecondMatches = FindMatchingItems(first, second);
+            String matches = FindMatchingItems(firstAndSecondMatches, third);
+
+            char match = matches[0];
+            long priority = priorityOfMatchingItem(match);
+
+            return priority;
         }
 
 
