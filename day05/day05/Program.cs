@@ -25,12 +25,18 @@ namespace day05
             Console.WriteLine("Starting configuration:");
             printStacks();
 
-            applyMoveSteps();
-
+            applyMoveSteps(moveAllAtOnce: false);
             Console.WriteLine("---------------------------------------------");
-            Console.WriteLine("Ending configuration:");
+            Console.WriteLine("Ending configuration for Part 1:");
             printStacks();
+            Console.WriteLine();
+            Console.WriteLine($"Top of all stacks: {topOfAllStacks()}");
 
+            parseInitialStackConfig();
+            applyMoveSteps(moveAllAtOnce: true);
+            Console.WriteLine("---------------------------------------------");
+            Console.WriteLine("Ending configuration for Part 1:");
+            printStacks();
             Console.WriteLine();
             Console.WriteLine($"Top of all stacks: {topOfAllStacks()}");
         }
@@ -58,16 +64,17 @@ namespace day05
             string[] stackNumbers = lines[stackNumbersIndex].Split(' ', StringSplitOptions.RemoveEmptyEntries);
             numberOfStacks = stackNumbers.Length;
 
-            for (int s = 0; s < numberOfStacks; s++)
-            {
-                stacks.Add("");
-            }
-
             Console.WriteLine($"# Stacks: {numberOfStacks}   numberConfig: [{configStart} - {configEnd}]    Moves: [{movesStart} - {movesEnd}]");
         }
 
         private static void parseInitialStackConfig()
         {
+            stacks = new List<string>();
+            for (int s = 0; s < numberOfStacks; s++)
+            {
+                stacks.Add("");
+            }
+
             // get the starting stack config
             for (int j = configStart; j <= configEnd; j++)
             {
@@ -85,7 +92,7 @@ namespace day05
             }
         }
 
-        static void applyMoveSteps()
+        static void applyMoveSteps(bool moveAllAtOnce)
         {
             for (int i = movesStart; i <= movesEnd; i++)
             {
@@ -95,16 +102,20 @@ namespace day05
                 int sourceStack = int.Parse(moveParts[3]) - 1;
                 int destStack = int.Parse(moveParts[5]) - 1;
 
-                applyMoveStep(numberToMove, sourceStack, destStack);
+                applyMoveStep(numberToMove, sourceStack, destStack, moveAllAtOnce);
             }
 
         }
 
-        static void applyMoveStep(int num, int src, int dst)
+        static void applyMoveStep(int num, int src, int dst, bool moveAllAtOnce)
         {
             //Console.WriteLine($"Move {num} from {src} -> {dst}");
             string boxesToMove = new String(stacks[src].Substring(0, num).ToArray());
-            boxesToMove = new String(boxesToMove.Reverse().ToArray());
+            if (!moveAllAtOnce)
+            {
+                boxesToMove = new String(boxesToMove.Reverse().ToArray());
+            }
+
             stacks[dst] = boxesToMove + stacks[dst];
 
             stacks[src] = stacks[src].Substring(num);
