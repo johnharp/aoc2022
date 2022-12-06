@@ -1,17 +1,34 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-var s = new StreamReader("../../../input.txt");
-var b = new Buffer(4);
+using System.Text;
 
-while(!s.EndOfStream)
+var s = new StreamReader("../../../input.txt");
+var packetBuffer = new Buffer(4);
+var messageBuffer = new Buffer(14);
+
+bool packetDetected = false;
+bool messageDetected = false;
+
+while(!s.EndOfStream &&
+      (packetDetected == false || messageDetected == false))
 {
     char c = (char) s.Read();
-    b.Add(c);
-    if (b.IsMarker())
+
+    packetBuffer.Add(c);
+    messageBuffer.Add(c);
+
+    if (!packetDetected && packetBuffer.IsMarker())
     {
-        b.Print();
-        Console.WriteLine($"Total read: {b.TotalCharsRead}");
-        break;
+        Console.WriteLine($"Packet marker: {packetBuffer} at " +
+            $"location {packetBuffer.TotalCharsRead}");
+        packetDetected = true;
+    }
+
+    if (!messageDetected && messageBuffer.IsMarker())
+    {
+        Console.WriteLine($"Message marker: {messageBuffer} at " +
+            $"location {messageBuffer.TotalCharsRead}");
+        messageDetected = true;
     }
 }
 
@@ -70,6 +87,16 @@ public class Buffer
             Console.Write(Chars[i]);
         }
         Console.WriteLine();
+    }
+
+    public override string ToString()
+    {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < BufferSize && i < TotalCharactersRead; i++)
+        {
+            b.Append(Chars[i]);
+        }
+        return b.ToString();
     }
 
     public bool IsMarker()
