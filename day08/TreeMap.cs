@@ -19,6 +19,8 @@ namespace day08
 		// 1-4). 
 		private int[][] VisMap { get; set; }
 
+		private int[][] ScenicMap { get; set; }
+
 		public TreeMap(string[] lines)
 		{
 			NumCols = lines[0].Length;
@@ -36,6 +38,7 @@ namespace day08
 
 			Map = new int[NumRows][];
 			VisMap = new int[NumRows][];
+			ScenicMap = new int[NumRows][];
 
 			int row = 0;
 			foreach(var line in  lines)
@@ -44,11 +47,13 @@ namespace day08
 				{
                     Map[row] = new int[NumCols];
 					VisMap[row] = new int[NumCols];
+					ScenicMap[row] = new int[NumCols];
                     for (int col = 0; col < NumCols; col++)
                     {
 						string v = line.Substring(col, 1);
 						Map[row][col] = int.Parse(v);
 						VisMap[row][col] = 0;
+						ScenicMap[row][col] = 0;
                     }
                 }
 				row++;
@@ -68,6 +73,11 @@ namespace day08
 		public void PrintVisMap()
 		{
 			Print(VisMap);
+		}
+
+		public void PrintScenicMap()
+		{
+			Print(ScenicMap);
 		}
 
 		public void Print(int[][] m)
@@ -154,6 +164,59 @@ namespace day08
 
 			return NumTreesVisible;
         }
+
+		public int CalculateScenicMap()
+		{
+			int maxScenic = 0;
+
+			for (int row=0;row<NumRows; row++)
+			{
+				for (int col=0; col<NumCols; col++)
+				{
+					int leftNumTrees = 0;
+					// scan left
+					for (int c = col-1; c >= 0; c-- )
+					{
+						leftNumTrees++;
+						if (Map[row][c] >= Map[row][col]) break;
+					}
+
+					int rightNumTrees = 0;
+					// scan right
+					for (int c = col+1; c < NumCols; c++)
+					{
+						rightNumTrees++;
+						if (Map[row][c] >= Map[row][col]) break;
+					}
+
+					int upNumTrees = 0;
+					// scan up
+					for (int r = row-1; r >= 0; r--)
+					{
+						upNumTrees++;
+						if (Map[r][col] >= Map[row][col]) break;
+					}
+
+					int downNumTrees = 0;
+					// scan down
+					for (int r = row+1; r < NumRows; r++)
+					{
+						downNumTrees++;
+						if (Map[r][col] >= Map[row][col]) break;
+					}
+
+					ScenicMap[row][col] = leftNumTrees * rightNumTrees * upNumTrees * downNumTrees;
+					if (ScenicMap[row][col] > maxScenic)
+					{
+						maxScenic = ScenicMap[row][col];
+					}
+
+				}
+			}
+
+			return maxScenic;
+		}
+
     }
 }
 
