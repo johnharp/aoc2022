@@ -2,7 +2,7 @@
 string input = "../../../input.txt";
 
 string[] lines = File.ReadAllLines(input);
-List<string> taillog = new List<string>();
+List<string> tailPositionLog = new List<string>();
 
 // playfield --
 // positive X to the right
@@ -11,18 +11,17 @@ List<string> taillog = new List<string>();
 // Input is 2000 lines so we won't exceed an int
 
 
-int headx = 0;
-int heady = 0;
+(int, int) head = (0, 0);
+(int, int) tail = (0, 0);
 
-int tailx = 0;
-int taily = 0;
 
 foreach(var line in lines)
 {
     HandleLine(line);
 }
-SummarizeTailLog();
 
+Console.WriteLine($"The tail visited {tailPositionLog.Distinct().Count()} " +
+    $"unique positions");
 
 
 void HandleLine(string line)
@@ -31,88 +30,71 @@ void HandleLine(string line)
     string dir = parts[0];
     int numsteps = int.Parse(parts[1]);
 
-    int xstep = 0;
-    int ystep = 0;
+    (int, int) step = (0, 0);
 
     switch(dir)
     {
         case "R":
-            xstep = 1;
+            step = (1, 0);
             break;
         case "L":
-            xstep = -1;
+            step = (-1, 0);
             break;
         case "U":
-            ystep = 1;
+            step = (0, 1);
             break;
         case "D":
-            ystep = -1;
+            step = (0, -1);
             break;
         default:
             throw new Exception("Bad input");
     }
 
     // log the starting position of the tail
-    LogTailPosition();
+    tailPositionLog.Add(tail.ToString());
 
     for (int i = 0; i<numsteps; i++)
     {
-        Move(xstep, ystep);
-        if (Follow())
-        {
-            LogTailPosition();
-        }
-        //Console.Out.WriteLine($"Head: x={headx}  y={heady}");
-        //Console.Out.WriteLine($"Tail: x={tailx}  y={taily}");
+        head = Move(head, step);
+        tail = Follow(head, tail);
+        tailPositionLog.Add(tail.ToString());
+
+        Console.Out.WriteLine($"Head: {head}   Tail: {tail}");
 
     }
 }
 
-void Move(int deltax, int deltay)
+(int, int) Move((int, int) head, (int, int) step)
 {
-    headx += deltax;
-    heady += deltay;
+    return (head.Item1 + step.Item1, head.Item2 + step.Item2);
 }
 
 // Move the tail (if necessary) to keep it next to the head.
 // If a tail move was made return true, else return false
-bool Follow()
+(int, int) Follow((int, int) leader, (int, int) follower)
 {
-    int xdiff = headx - tailx;
-    int ydiff = heady - taily;
+    (int, int) diff = (
+        leader.Item1 - follower.Item1,
+        leader.Item2 - follower.Item2);
 
     // "normalize" the x and y differences
     // for example, if x is off by +2, xnorm = +1
     // if y is off by -2, ynorm = -1
     // if y is off by 1, ynorm = 1
-    int xnorm = xdiff == 0 ? 0 : xdiff / int.Abs(xdiff);
-    int ynorm = ydiff == 0 ? 0 : ydiff / int.Abs(ydiff);
+    (int, int) norm = (
+        diff.Item1 == 0 ? 0 : diff.Item1 / int.Abs(diff.Item1),
+        diff.Item2 == 0 ? 0 : diff.Item2 / int.Abs(diff.Item2)
+        );
 
     // if they are touching, nothing to do
-    if (int.Abs(xdiff) <= 1 &&
-        int.Abs(ydiff) <= 1)
+    if (int.Abs(diff.Item1) <= 1 &&
+        int.Abs(diff.Item2) <= 1)
     {
-        return false;
+        return follower;
     }
 
     // if they are not touching, take one step
-    // toward the head.  If 
-    // 
-    tailx += xnorm;
-    taily += ynorm;
-
-    return true;
-}
-
-void LogTailPosition()
-{
-    string s = $"{tailx},{taily}";
-    taillog.Add(s);
-}
-
-void SummarizeTailLog()
-{
-    var uniqueTailePositions = taillog.Distinct();
-    Console.WriteLine($"The tail visited {uniqueTailePositions.Count()} " +
-        $"unique positions");
+    // toward the head.
+    return (follower.Item1 + norm.Item1,
+        follower.Item2 + norm.Item2);
 }
