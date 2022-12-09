@@ -1,4 +1,5 @@
 ﻿//string input = "../../../input-example.txt";
+//string input = "../../../input-example2.txt";
 string input = "../../../input.txt";
 
 string[] lines = File.ReadAllLines(input);
@@ -10,16 +11,27 @@ List<string> tailPositionLog = new List<string>();
 // Head of rope starts at origin (0,0)
 // Input is 2000 lines so we won't exceed an int
 
+List<(int, int)> knots = new List<(int, int)>();
+// head is knot 0, tail is knot 9
+// set all the initial knot positions to (0, 0)
+for (int i = 0; i < 10; i++)
+{
+    var knot = (0, 0);
+    knots.Add(knot);
+}
 
-(int, int) head = (0, 0);
-(int, int) tail = (0, 0);
+// log the starting position of the tail
+tailPositionLog.Add(knots[9].ToString());
 
-
-foreach(var line in lines)
+foreach (var line in lines)
 {
     HandleLine(line);
 }
 
+//foreach(var log in tailPositionLog.Distinct())
+//{
+//    Console.WriteLine(log);
+//}
 Console.WriteLine($"The tail visited {tailPositionLog.Distinct().Count()} " +
     $"unique positions");
 
@@ -50,18 +62,22 @@ void HandleLine(string line)
             throw new Exception("Bad input");
     }
 
-    // log the starting position of the tail
-    tailPositionLog.Add(tail.ToString());
-
-    for (int i = 0; i<numsteps; i++)
+    for (int i = 0; i < numsteps; i++)
     {
-        head = Move(head, step);
-        tail = Follow(head, tail);
-        tailPositionLog.Add(tail.ToString());
-
-        Console.Out.WriteLine($"Head: {head}   Tail: {tail}");
-
+        knots[0] = Move(knots[0], step);
+        // use Follow on each knot 1 - 9
+        for (int j = 1; j <= 9; j++)
+        {
+            knots[j] = Follow(knots[j - 1], knots[j]);
+        }
+        tailPositionLog.Add(knots[9].ToString());
     }
+
+    //for(int i = 0; i<=9; i++)
+    //{
+    //    Console.Write($"k{i}:{knots[i]} ");
+    //}
+    //Console.WriteLine();
 }
 
 (int, int) Move((int, int) head, (int, int) step)
