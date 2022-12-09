@@ -304,6 +304,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1010940368}
   - component: {fileID: 1010940369}
+  - component: {fileID: 1010940370}
   m_Layer: 0
   m_Name: Forest
   m_TagString: Untagged
@@ -334,6 +335,18 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1010940367}
   m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc367c38283a449fc8a5bf8e9b8c3c1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1010940370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010940367}
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc367c38283a449fc8a5bf8e9b8c3c1f, type: 3}
   m_Name: 
