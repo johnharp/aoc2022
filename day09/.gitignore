@@ -1,3 +1,8 @@
+
+input.txt
+input-example1.txt
+input-example2.txt
+
 # globs
 Makefile.in
 *.userprefs
