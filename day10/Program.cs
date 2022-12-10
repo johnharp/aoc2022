@@ -44,5 +44,27 @@ for (int i = 20; i < xvalues.Count; i += 40)
     totalStrength += strength;
 }
 
-Console.WriteLine($"Total signal strength = {totalStrength}");
+Console.WriteLine($"Total signal strength =" +
+    $" {totalStrength}");
+Console.WriteLine();
 
+for(int row = 0; row<=5; row++)
+{
+    for (int col=0; col<=39; col++)
+    {
+        int clock = col + (row * 40) + 1;
+
+        int spritePos = (int) xvalues[clock];
+        int minPixel = spritePos - 1;
+        int maxPixel = spritePos + 1;
+        if (minPixel<=col && maxPixel>=col)
+        {
+            Console.Write("#");
+        }
+        else
+        {
+            Console.Write(".");
+        }
+    }
+    Console.WriteLine();
+}
