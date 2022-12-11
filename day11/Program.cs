@@ -1,6 +1,5 @@
 ﻿using day11;
 
-
 //CreateExampleMonkeys();
 
 CreateMonkeys();
