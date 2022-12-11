@@ -16,8 +16,7 @@ namespace day11
 		public long NumItemsInspected = 0;
 
 		public static List<Monkey> All = new List<Monkey>();
-
-		public static long LCM = 1;
+		public static long ReduceDivisor = 1;
 
 		public Monkey(
 			string op, long opv,
@@ -86,37 +85,18 @@ namespace day11
 
 		public long Reduce(long value)
 		{
-			// In part 1, reduce by divide by 3
-
-			// In part 2, use lowest common multiple
-			if (LCM == 1)
+			if (ReduceDivisor == 1)
 			{
-				List<long> divisors = new List<long>();
-				foreach(var monkey in All)
-				{
-					divisors.Add(monkey.TestValue);
-				}
-				long[] divisorsArray = divisors.ToArray();
+                foreach (var m in All)
+                {
+                    ReduceDivisor *= m.TestValue;
+                }
+            }
 
-				LCM = lcm(divisorsArray);
-			}
-
-            return value % LCM;
+			return value % ReduceDivisor;
 		}
 
-        // LCM algorithm taken from here:
-        // https://www.w3resource.com/csharp-exercises/math/csharp-math-exercise-20.php
 
-        public static long gcd(long n1, long n2)
-        {
-            if (n2 == 0) return n1;
-            else return gcd(n2, n1 % n2);
-        }
-
-		public static long lcm(params long[] nums)
-        {
-            return nums.Aggregate((S, v) => S * v / gcd(S, v));
-        }
     }
 }
 
