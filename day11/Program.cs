@@ -1,57 +1,14 @@
 ﻿using day11;
-using System.Numerics;
-
-//PrimePolyTerm t = new PrimePolyTerm(66);
-//t.MultiplyByPrime(11);
-//t.MultiplyByPrime(11);
-//Console.WriteLine(t);
-//t = t.Mult(t);
-//Console.WriteLine(t);
-
-//PrimePoly p = new PrimePoly(66);
-//p.DoChecks = true;
-
-//Console.WriteLine(p);
-//p.MultiplyByPrime(11);
-//Console.WriteLine(p);
-//p.AddNumber(6);
-//Console.WriteLine(p);
 
 
-//p.AddNumber(3);
-//Console.WriteLine(p);
+//CreateExampleMonkeys();
 
-//p.Square();
-//Console.WriteLine(p);
+CreateMonkeys();
 
 
-//Console.WriteLine($"Divisible by 79 => {p.IsDivisibleBy(79)}");
-//Console.WriteLine("Adding 3");
-//p.AddNumber(3);
-//Console.WriteLine(p);
-//Console.WriteLine($"Divisible by 79 => {p.IsDivisibleBy(79)}");
-//Console.WriteLine("Squaring");
-//p.Square();
-//Console.WriteLine(p);
-
-//Console.WriteLine("Multiplying by 19");
-//p.MultiplyByPrime(19);
-//Console.WriteLine(p);
-
-//Console.WriteLine($"Divisible by 19 => {p.IsDivisibleBy(19)}");
-
-
-CreateExampleMonkeys();
-//CreatePart1Monkeys();
-
-Monkey.PrintAll();
-
-for (int i = 1; i <= 20; i++)
+for (int i = 1; i <= 10_000; i++)
 {
     Monkey.CompleteRound();
-    Console.WriteLine($"After round {i}:");
-    Monkey.PrintAll();
-    Console.WriteLine();
 }
 
 Monkey.PrintMonkeyBusinessLevel();
@@ -60,78 +17,52 @@ Monkey.PrintMonkeyBusinessLevel();
 
 void CreateExampleMonkeys()
 {
-    Monkey m;
-
-    m = new Monkey(79, 98);
-    m.Operation = (PrimePoly p) => p.MultiplyByPrime(19);
-    m.Test = (PrimePoly p) => p.IsDivisibleBy(23) ? 2 : 3;
-    Monkey.All.Add(m);
-
-    m = new Monkey(54, 65, 75, 74);
-    m.Operation = (PrimePoly p) => p.AddNumber(6);
-    m.Test = (PrimePoly p) => p.IsDivisibleBy(19) ? 2 : 0;
-    Monkey.All.Add(m);
-
-    m = new Monkey(79, 60, 97);
-    m.Operation = (PrimePoly p) => p.Square();
-    m.Test = (PrimePoly p) => p.IsDivisibleBy(13) ? 1 : 3;
-    Monkey.All.Add(m);
-
-    m = new Monkey(74);
-    m.Operation = (PrimePoly p) => p.AddNumber(3);
-    m.Test = (PrimePoly p) => p.IsDivisibleBy(17) ? 0 : 1;
-    Monkey.All.Add(m);
+    new Monkey(op: "*", opv: 19,
+        testv: 23, trueval: 2, falseval: 3,
+        79, 98);
+    new Monkey(op: "+", opv: 6,
+        testv: 19, trueval: 2, falseval: 0,
+        54, 65, 75, 74);
+    new Monkey(op: "**", opv: 0,
+        testv: 13, trueval: 1, falseval: 3,
+        79, 60, 97);
+    new Monkey(op: "+", opv: 3,
+        testv: 17, trueval: 0, falseval: 1,
+        74);
 }
 
-//void CreatePart1Monkeys()
-//{
-//    Monkey m;
-
-//    m = new Monkey();
-//    m.ItemsOld = new List<long> { 66, 79 };
-//    m.Operation = (long old) => old * 11;
-//    m.Test = (long x) => (x % 7 == 0) ? 6 : 7;
-//    Monkey.All.Add(m);
-
-//    m = new Monkey();
-//    m.ItemsOld = new List<long> { 84, 94, 94, 81, 98, 75 };
-//    m.Operation = (long old) => old * 17;
-//    m.Test = (long x) => (x % 13 == 0) ? 5 : 2;
-//    Monkey.All.Add(m);
-
-//    m = new Monkey();
-//    m.ItemsOld = new List<long> { 85, 79, 59, 64, 79, 95, 67 };
-//    m.Operation = (long old) => old + 8;
-//    m.Test = (long x) => (x % 5 == 0) ? 4 : 5;
-//    Monkey.All.Add(m);
-
-//    m = new Monkey();
-//    m.ItemsOld = new List<long> { 70 };
-//    m.Operation = (long old) => old + 3;
-//    m.Test = (long x) => (x % 19 == 0) ? 6 : 0;
-//    Monkey.All.Add(m);
-
-//    m = new Monkey();
-//    m.ItemsOld = new List<long> { 57, 69, 78, 78 };
-//    m.Operation = (long old) => old + 4;
-//    m.Test = (long x) => (x % 2 == 0) ? 0 : 3;
-//    Monkey.All.Add(m);
-
-//    m = new Monkey();
-//    m.ItemsOld = new List<long> { 65, 92, 60, 74, 72 };
-//    m.Operation = (long old) => old + 7;
-//    m.Test = (long x) => (x % 11 == 0) ? 3 : 4;
-//    Monkey.All.Add(m);
-
-//    m = new Monkey();
-//    m.ItemsOld = new List<long> { 77, 91, 91 };
-//    m.Operation = (long old) => old * old;
-//    m.Test = (long x) => (x % 17 == 0) ? 1 : 7;
-//    Monkey.All.Add(m);
-
-//    m = new Monkey();
-//    m.ItemsOld = new List<long> { 76, 58, 57, 55, 67, 77, 54, 99 };
-//    m.Operation = (long old) => old + 6;
-//    m.Test = (long x) => (x % 3 == 0) ? 2 : 1;
-//    Monkey.All.Add(m);
-//}
+void CreateMonkeys()
+{
+    new Monkey(
+        op: "*", opv: 11,
+        testv: 7, trueval: 6, falseval: 7,
+        66, 79);
+    new Monkey(
+        op: "*", opv: 17,
+        testv: 13, trueval: 5, falseval: 2,
+        84, 94, 94, 81, 98, 75);
+    new Monkey(
+        op: "+", opv: 8,
+        testv: 5, trueval: 4, falseval: 5,
+        85, 79, 59, 64, 79, 95, 67);
+    new Monkey(
+        op: "+", opv: 3,
+        testv: 19, trueval: 6, falseval: 0,
+        70);
+    new Monkey(
+        op: "+", opv: 4,
+        testv: 2, trueval: 0, falseval: 3,
+        57, 69, 78, 78);
+    new Monkey(
+        op: "+", opv: 7,
+        testv: 11, trueval: 3, falseval: 4,
+        65, 92, 60, 74, 72);
+    new Monkey(
+        op: "**", opv: 0,
+        testv: 17, trueval: 1, falseval: 7,
+        77, 91, 91);
+    new Monkey(
+        op: "+", opv: 6,
+        testv: 3, trueval: 2, falseval: 1,
+        76, 58, 57, 55, 67, 77, 54, 99);
+}
