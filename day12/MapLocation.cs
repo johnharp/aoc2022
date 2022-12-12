@@ -7,14 +7,13 @@ namespace day12
         public int Row { get; set; }
         public int Col { get; set; }
 
-        public int StepsFromStart { get; set; }
-        public bool Solved = false;
+        public int Distance { get; set; }
 
         public List<MapLocation> Neighbors = new List<MapLocation>();
 
 		public MapLocation(char h, int row, int col)
         {
-            StepsFromStart = int.MaxValue;
+            Distance = int.MaxValue;
 			Height = h;
             Row = row;
             Col = col;
@@ -37,7 +36,7 @@ namespace day12
             {
                 Console.Write(l.RowCol);
             }
-            Console.Write($" steps: {StepsFromStart}");
+            Console.Write($" steps: {Distance}");
             Console.WriteLine();
         }
     }

@@ -73,7 +73,7 @@ namespace day12
             {
                 foreach (var loc in row)
                 {
-                    loc.StepsFromStart = int.MaxValue;
+                    loc.Distance = int.MaxValue;
                 }
             }
         }
@@ -157,8 +157,10 @@ namespace day12
 		}
 
 		// return  all the neighboring (row, col) locations
-		// to fromloc that are not more than maxDownHeight 
-		// lower
+		// Since we're solving backwards (looking for paths from
+		// the highest point to the lowest point) only allow neighbors
+		// that are up to one step lower, same height, or any number of
+		// steps higher
 		public List<MapLocation> Neighbors(MapLocation from)
 		{
 			var neighbors = new List<MapLocation>();
