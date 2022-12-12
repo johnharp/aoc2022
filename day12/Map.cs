@@ -67,18 +67,45 @@ namespace day12
 			}
 		}
 
+		public void SetDistancesToMax()
+		{
+            foreach (var row in Locations)
+            {
+                foreach (var loc in row)
+                {
+                    loc.StepsFromStart = int.MaxValue;
+                }
+            }
+        }
+
 		public List<MapLocation> AllLocations()
 		{
 			var list = new List<MapLocation>();
-			foreach(var row in Locations)
+			foreach (var row in Locations)
 			{
-				foreach(var loc in row)
+				foreach (var loc in row)
 				{
 					list.Add(loc);
 				}
 			}
 			return list;
 		}
+
+		public List<MapLocation> PossibleStartLocations()
+		{
+            var list = new List<MapLocation>();
+            foreach (var row in Locations)
+            {
+                foreach (var loc in row)
+                {
+					if (loc.Height == 'a')
+					{
+                        list.Add(loc);
+                    }
+                }
+            }
+            return list;
+        }
 
 		public void Print()
 		{

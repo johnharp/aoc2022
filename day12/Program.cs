@@ -5,16 +5,26 @@ class Program
     {
         string[] lines = File.ReadAllLines("../../../input.txt");
         Map m = new Map(lines);
-        m.Print();
-
-        List<MapLocation> ShortestPathSet = new List<MapLocation>();
-
         // for each map location, set its list of neighbors
         // only allow 1 step upward
         m.ComputeNeighbors(maxUpHeight: 1);
-        var allLocations = m.AllLocations();
 
-        m.StartLoc.StepsFromStart = 0;
+        Console.WriteLine($"Max int: {int.MaxValue}");
+
+        foreach (var start in m.PossibleStartLocations())
+        {
+            int steps = SolveFrom(m, start);
+            Console.WriteLine(steps);
+        }
+
+    }
+
+    public static int SolveFrom(Map m, MapLocation startLoc)
+    {
+        List<MapLocation> ShortestPathSet = new List<MapLocation>();
+        m.SetDistancesToMax();
+        var allLocations = m.AllLocations();
+        startLoc.StepsFromStart = 0;
 
         // continue until the ShortestPathSet contains all locations
         while (allLocations.Any())
@@ -26,7 +36,7 @@ class Program
             allLocations.Remove(l);
 
             var neighbors = l.Neighbors;
-            foreach(MapLocation neighbor in neighbors)
+            foreach (MapLocation neighbor in neighbors)
             {
                 if (neighbor.StepsFromStart > l.StepsFromStart + 1)
                 {
@@ -36,7 +46,7 @@ class Program
 
         }
 
-        m.EndLoc.Print();
+        return m.EndLoc.StepsFromStart;
     }
 }
 
