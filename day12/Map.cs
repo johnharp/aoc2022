@@ -56,13 +56,13 @@ namespace day12
 			}
 		}
 
-		public void ComputeNeighbors(int maxUpHeight)
+		public void ComputeNeighbors()
 		{
 			foreach(var row in Locations)
 			{
 				foreach(var loc in row)
 				{
-					loc.Neighbors = Neighbors(loc, maxUpHeight);
+					loc.Neighbors = Neighbors(loc);
                 }
 			}
 		}
@@ -159,7 +159,7 @@ namespace day12
 		// return  all the neighboring (row, col) locations
 		// to fromloc that are not more than maxDownHeight 
 		// lower
-		public List<MapLocation> Neighbors(MapLocation from, int maxUpHeight)
+		public List<MapLocation> Neighbors(MapLocation from)
 		{
 			var neighbors = new List<MapLocation>();
 			var deltas = new List<(int, int)>
@@ -172,7 +172,7 @@ namespace day12
 			foreach(var delta in deltas)
 			{
 				MapLocation? l = LocationDelta(from, delta);
-				if (l != null && l.Height - from.Height <= maxUpHeight)
+				if (l != null && l.Height -  from.Height >= -1)
 				{
 					neighbors.Add(l);
 				}

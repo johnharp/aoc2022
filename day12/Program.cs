@@ -7,19 +7,26 @@ class Program
         Map m = new Map(lines);
         // for each map location, set its list of neighbors
         // only allow 1 step upward
-        m.ComputeNeighbors(maxUpHeight: 1);
+        m.ComputeNeighbors();
 
-        Console.WriteLine($"Max int: {int.MaxValue}");
+        SolveFrom(m, m.EndLoc);
 
-        foreach (var start in m.PossibleStartLocations())
+        var startingLocations = m.PossibleStartLocations();
+
+        int min = int.MaxValue;
+        foreach(var l in startingLocations)
         {
-            int steps = SolveFrom(m, start);
-            Console.WriteLine(steps);
+            if (l.StepsFromStart < min)
+            {
+                min = l.StepsFromStart;
+            }
         }
 
+        Console.WriteLine($"Part 1 Answer: {m.StartLoc.StepsFromStart}");
+        Console.WriteLine($"Part 2 Answer: {min}");
     }
 
-    public static int SolveFrom(Map m, MapLocation startLoc)
+    public static void SolveFrom(Map m, MapLocation startLoc)
     {
         List<MapLocation> ShortestPathSet = new List<MapLocation>();
         m.SetDistancesToMax();
@@ -38,15 +45,14 @@ class Program
             var neighbors = l.Neighbors;
             foreach (MapLocation neighbor in neighbors)
             {
-                if (neighbor.StepsFromStart > l.StepsFromStart + 1)
+                if (l.StepsFromStart != int.MaxValue &&
+                    l.StepsFromStart + 1 < neighbor.StepsFromStart)
                 {
                     neighbor.StepsFromStart = l.StepsFromStart + 1;
                 }
             }
 
         }
-
-        return m.EndLoc.StepsFromStart;
     }
 }
 
