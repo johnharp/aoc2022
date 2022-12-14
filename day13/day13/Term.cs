@@ -13,7 +13,7 @@ namespace day13
 
         public bool IsList = false;
         public bool IsValue {  get { return !IsList; } }
-        public int Value;
+        public int Value = -1;
         public List<Term> Terms = new List<Term>();
 
         public Term()
