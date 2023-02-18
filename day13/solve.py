@@ -1,39 +1,8 @@
+from list import *
+
 pairs = []
 indicies_of_right_ordered_pairs = []
 
-
-def indent(depth):
-    return " " * depth * 2
-
-def list_values(l):
-    l = l[1:-1]
-    v = []
-
-    acc=""
-    i = 0
-    braces = 0
-
-    while i < len(l):
-        char = l[i]
-        if char == "[":
-            braces+=1
-            acc += char
-        elif char == "]":
-            braces-=1
-            acc += char
-        elif char == ",":
-            if braces > 0:
-                acc += char
-            elif braces == 0:
-                v.append(acc)
-                acc = ""
-        else:
-             acc += char
-
-        i+=1
-
-    if acc != "": v.append(acc)
-    return v
 
 # Compare two packets given the rules outlined
 # in the problem description
@@ -43,11 +12,9 @@ def list_values(l):
 #   0 if left == right
 #   positive value if left > right
 def comp(left, right, depth):
-    print(f"{indent(depth)}- Compare {left} vs {right}")
 
     if is_integer(left) and is_list(right):
         left = integer_to_list(left)
-        print(f"- Mixed types; convert left to {left} and retry comparison")
         return comp(left, right, depth)
     elif is_list(left) and is_integer(right):
         right = integer_to_list(right)
@@ -66,8 +33,10 @@ def comp(left, right, depth):
 
         i = 0
         while i < len(left_values):
+
+            # if right side ran out of values, not in the right order
             if i+1 > len(right_values):
-                return -1
+                return 1
 
             left_value = left_values[i]
             right_value = right_values[i]
@@ -80,6 +49,9 @@ def comp(left, right, depth):
                 return result   
 
             i += 1  
+
+        # left side ran out of items so in right order
+        return -1
 
     return 0
 
@@ -118,14 +90,11 @@ with open('input.txt', 'r') as f:
 
 
 for pair_num, pair in enumerate(pairs):
-    print(f"== Pair {pair_num+1} ==")
     result = comp(pair[0], pair[1], 0)
 
     if result <= 0:
-        print("Right!")
         indicies_of_right_ordered_pairs.append(pair_num + 1)
-    else:
-        print("wrong")
+
 
 
 print(f"Correct pair numbers: {indicies_of_right_ordered_pairs}")
