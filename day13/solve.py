@@ -35,8 +35,6 @@ def list_values(l):
     if acc != "": v.append(acc)
     return v
 
-print(list_values("[2,[3,[4,[5,6,0]]]]"))
-
 # Compare two packets given the rules outlined
 # in the problem description
 #
@@ -60,10 +58,16 @@ def comp(left, right, depth):
         left_values = list_values(left)
         right_values = list_values(right)
 
+        if len(left_values) == 0 and len(right_values) > 0:
+            return -1
+
+        if len(left_values) == 0 and len(right_values) == 0:
+            return 0
+
         i = 0
         while i < len(left_values):
             if i+1 > len(right_values):
-                return 1
+                return -1
 
             left_value = left_values[i]
             right_value = right_values[i]
@@ -94,7 +98,8 @@ def is_list(v):
 #  True if v is and integer
 #  False if v is not an integer
 def is_integer(v):
-    return not is_list(v)
+    
+    return not is_list(v) and len(v) > 0
 
 def integer_to_list(v):
     return f"[{v}]"
@@ -115,8 +120,12 @@ with open('input.txt', 'r') as f:
 for pair_num, pair in enumerate(pairs):
     print(f"== Pair {pair_num+1} ==")
     result = comp(pair[0], pair[1], 0)
+
     if result <= 0:
+        print("Right!")
         indicies_of_right_ordered_pairs.append(pair_num + 1)
+    else:
+        print("wrong")
 
 
 print(f"Correct pair numbers: {indicies_of_right_ordered_pairs}")
