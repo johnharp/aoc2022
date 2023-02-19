@@ -33,15 +33,53 @@ function handleSegment(p1, p2) {
     }
 }
 
-function handleInputEnd() {
+function executeSolver() {
+
     world.dump();
-    world.minNonEmptyY(500);
-    world.minNonEmptyY(501);
-    world.minNonEmptyY(502);
+    var numDroppedAndCameToRest = 0;
+    var cameToRest = true;
+
+    while(cameToRest) {
+        cameToRest = dropSand(500,0);
+        if (cameToRest) numDroppedAndCameToRest++;
+        world.dump();
+    }
+    console.log(`Total that came to rest = ${numDroppedAndCameToRest}`);
+}
+
+//
+// Returns true if the dropped sand comes to rest
+// Returns false if the dropped sand will fall forever
+//
+function dropSand(x, y) {
+    console.log(`called dropSand(${x}, ${y})`);
+    var miny = world.firstNonEmptyYBelow(x, y);
+
+    // either there is nothing at all in this colum,
+    // or the only obstructions are above us, so will
+    // fall forever
+    if (miny === undefined) return false;
+
+    // there is something directly below, so try to step to the left
+    // and find an empty spot just to the left of what's below
+    if (world.get(x-1, miny) === '.') {
+        return dropSand(x-1, miny);
+    }
+
+    // something already to the left at the same level as what's below
+    // try right instead
+    if (world.get(x+1, miny) === '.') {
+        return dropSand(x+1, miny);
+    }
+
+    // there's something left-below, direcly-below, and right-below
+    // come to rest at x, miny-1
+    world.set(x, miny-1, "o");
+    return true;
 }
 
 var linereader = readline.createInterface({
-    input: fs.createReadStream('input-example.txt')
+    input: fs.createReadStream('input.txt')
 });
 linereader.on('line', handleInputLine);
-linereader.on('close', handleInputEnd);
+linereader.on('close', executeSolver);

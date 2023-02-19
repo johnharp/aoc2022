@@ -19,18 +19,18 @@ var world = {
         return this.data[x][y];
     },
 
-    minNonEmptyY: function(x) {
+    firstNonEmptyYBelow: function(sx, sy) {
         var returnValue = undefined;
 
-        if (this.data[x] !== undefined) {
-            this.data[x].forEach((value, y) => {
-                if (returnValue === undefined || y < returnValue) {
+        if (this.data[sx] !== undefined) {
+            this.data[sx].forEach((value, y) => {
+                if ((returnValue === undefined || y < returnValue) && y > sy) {
                     returnValue = y;
                 }
             });
         }
 
-        console.log(`minNonEmptyY(${x}) = ${returnValue}`);
+        console.log(`firstNonEmptyYBelow(${sx}, ${sy}) = ${returnValue}`);
         return returnValue;
     },
 
