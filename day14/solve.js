@@ -33,18 +33,22 @@ function handleSegment(p1, p2) {
     }
 }
 
-function executeSolver() {
-
+function executeSolvers() {
+    world.computeFloorY();
     world.dump();
-    var numDroppedAndCameToRest = 0;
-    var cameToRest = true;
 
-    while(cameToRest) {
-        cameToRest = dropSand(500,0);
-        if (cameToRest) numDroppedAndCameToRest++;
-        world.dump();
+    console.log(`floorY = ${world.floorY}`);
+
+    var numDropped = 0;
+
+    while(world.get(500, 0) === '.') {
+        dropSand(500,0);
+        numDropped++;
+        //world.dump();
     }
-    console.log(`Total that came to rest = ${numDroppedAndCameToRest}`);
+    world.dump();
+
+    console.log(`Total dropped = ${numDropped}`);
 }
 
 //
@@ -52,29 +56,27 @@ function executeSolver() {
 // Returns false if the dropped sand will fall forever
 //
 function dropSand(x, y) {
-    console.log(`called dropSand(${x}, ${y})`);
+    //console.log(`called dropSand(${x}, ${y})`);
     var miny = world.firstNonEmptyYBelow(x, y);
 
-    // either there is nothing at all in this colum,
-    // or the only obstructions are above us, so will
-    // fall forever
-    if (miny === undefined) return false;
+    if (miny < world.floorY) {
+        // there is something directly below, so try to step to the left
+        // and find an empty spot just to the left of what's below
+        if (world.get(x-1, miny) === '.') {
+            return dropSand(x-1, miny);
+        }
 
-    // there is something directly below, so try to step to the left
-    // and find an empty spot just to the left of what's below
-    if (world.get(x-1, miny) === '.') {
-        return dropSand(x-1, miny);
-    }
-
-    // something already to the left at the same level as what's below
-    // try right instead
-    if (world.get(x+1, miny) === '.') {
-        return dropSand(x+1, miny);
+        // something already to the left at the same level as what's below
+        // try right instead
+        if (world.get(x+1, miny) === '.') {
+            return dropSand(x+1, miny);
+        }
     }
 
     // there's something left-below, direcly-below, and right-below
     // come to rest at x, miny-1
     world.set(x, miny-1, "o");
+
     return true;
 }
 
@@ -82,4 +84,4 @@ var linereader = readline.createInterface({
     input: fs.createReadStream('input.txt')
 });
 linereader.on('line', handleInputLine);
-linereader.on('close', executeSolver);
+linereader.on('close', executeSolvers);

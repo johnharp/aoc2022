@@ -1,6 +1,24 @@
 var world = {
     data: [],
 
+    floorY: 0,
+
+    computeFloorY: function() {
+        var maxY = Number.MIN_SAFE_INTEGER;
+
+        this.data.forEach((el, x) => {
+            col = this.data[x];
+
+            if (col != undefined) {
+                col.forEach((el, y) => {
+                    if (y > maxY) maxY = y;
+                });
+            }
+        });
+
+        this.floorY = maxY + 2;
+    },
+
     set: function(x, y, v) {
         if (this.data[x] === undefined) {
             this.data[x] = [];
@@ -10,6 +28,9 @@ var world = {
     },
 
     get: function(x, y) {
+
+        if (y >= this.floorY) return '#';
+
         if (this.data[x] === undefined ||
             this.data[x][y] === undefined)
         {
@@ -20,17 +41,17 @@ var world = {
     },
 
     firstNonEmptyYBelow: function(sx, sy) {
-        var returnValue = undefined;
+        var returnValue = this.floorY;
 
         if (this.data[sx] !== undefined) {
             this.data[sx].forEach((value, y) => {
-                if ((returnValue === undefined || y < returnValue) && y > sy) {
+                if ( y < returnValue && y > sy) {
                     returnValue = y;
                 }
             });
         }
 
-        console.log(`firstNonEmptyYBelow(${sx}, ${sy}) = ${returnValue}`);
+        //console.log(`firstNonEmptyYBelow(${sx}, ${sy}) = ${returnValue}`);
         return returnValue;
     },
 
