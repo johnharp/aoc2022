@@ -28,11 +28,51 @@ namespace day15
 			int bx = GetMatch(match, "BeaconX");
 			int by = GetMatch(match, "BeaconY");
 
-			Beacon b = new Beacon(bx, by);
-			Sensor s = new Sensor(sx, sy, b);
+			Beacon? b = Beacons.Find(be => be.Location.x == bx &&
+								be.Location.y == by);
+			if (b == null)
+			{
+				b = new Beacon(bx, by);
+				Beacons.Add(b);
+            }
+            Sensor s = new Sensor(sx, sy, b);
+			Sensors.Add(s);
         }
 
-		private int GetMatch(Match? match, string key)
+		public List<Range> RangesWithoutBeacon(int atY, int lowestAllowed, int highestAllowed)
+		{
+            var allintersections = new List<Range>();
+            foreach (var s in Sensors)
+            {
+                Range? intersections = s.XValueIntersections(atY);
+                if (intersections != null)
+                {
+					if (intersections.Min < lowestAllowed) intersections.Min = lowestAllowed;
+					if (intersections.Max > highestAllowed) intersections.Max = highestAllowed;
+                    allintersections.Add(intersections);
+                }
+            }
+
+            allintersections = Range.MergeRanges(allintersections);
+
+			return allintersections;
+
+			//int sum = allintersections.Sum(i => i.NumberContained);
+			//foreach(var b in Beacons)
+			//{
+			//	if (b.Location.x >= lowestAllowed &&
+			//		b.Location.x <= highestAllowed)
+			//	{
+			//		if (b.Location.y == atY)
+			//		{
+			//			sum--;
+			//		}
+			//	}
+			//}
+			//return sum;
+        }
+
+        private int GetMatch(Match? match, string key)
 		{
 			if (match == null) throw new FormatException("Bad input line");
 

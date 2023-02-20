@@ -16,6 +16,15 @@ namespace day15
         {
             return $"({x}, {y})";
         }
+
+        public int DistanceTo(Location other)
+        {
+            int distance =
+                Math.Abs(x - other.x) +
+                Math.Abs(y - other.y);
+
+            return distance;
+        }
     }
 }
 
