@@ -10,6 +10,8 @@ namespace day14
     internal class Map
     {
         Dictionary<int, Dictionary<int, char>> Points = new Dictionary<int, Dictionary<int, char>>();
+        public List<Sand> MovingSand = new List<Sand>();
+
         public void Init(string[] lines)
         {
             foreach(string line in lines)
@@ -72,6 +74,32 @@ namespace day14
             return '.';
         }
 
+        // If there is moving sand at x,y return true
+        public bool MovingSandAt(int x, int y)
+        {
+            foreach(var s in MovingSand)
+            {
+                if (s.x == x && s.y == y) return true;
+            }
+            return false;
+        }
+
+        public void Step()
+        {
+            foreach(var s in MovingSand)
+            {
+                while (MoveSand(s)) { }
+            }
+        }
+
+        public bool MoveSand(Sand s)
+        {
+            bool moved = false;
+
+
+            return moved;
+        }
+
         public void Print()
         {
             int minx = int.MaxValue;
@@ -91,11 +119,26 @@ namespace day14
                 }
             }
 
+            foreach (var s in MovingSand)
+            {
+                if (s.x < minx) minx = s.x;
+                if (s.x > maxx) maxx = s.x;
+                if (s.y < miny) miny = s.y;
+                if (s.y > maxy) maxy = s.y;
+            }
+
             for (int y = miny; y <= maxy; y++)
             {
                 for (int x = minx; x <= maxx; x++)
                 {
-                    Console.Write(Get(x, y));
+                    if (MovingSandAt(x, y))
+                    {
+                        Console.Write("~");
+                    }
+                    else
+                    {
+                        Console.Write(Get(x, y));
+                    }
                 }
                 Console.WriteLine();
             }
