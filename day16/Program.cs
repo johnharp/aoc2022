@@ -3,7 +3,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        string[] lines = File.ReadAllLines("../../../input.txt");
+        string[] lines = File.ReadAllLines("../../../input-example.txt");
 
         foreach (var line in lines)
         {
