@@ -17,9 +17,12 @@ export function solve(filename) {
         node.dist = dijkstra(graph, node).dist;
     }
 
-    console.log(graph);
+    const order = ["DD", "BB", "JJ", "HH", "EE", "CC" ];
 
-    const part1 = lines.length;
+    const onStarting = calcOnAtTimes(graph, "AA", order);
+    let part1 = calcTotalPressureReleased(graph, order, onStarting);
+
+
     const part2 = lines.length;
     return [part1, part2];
 }
@@ -97,6 +100,35 @@ function dijkstra(graph, start) {
         dist: dist,
         prev: prev
     }
+}
+
+function calcOnAtTimes(graph, start, valves) {
+    const onStarting = []
+    let current = start;
+    let time = 0;
+
+    for (const dest of valves) {
+        const travel = graph.get(current).dist.get(dest);
+        time = time + travel + 1;
+        onStarting.push(time);
+
+        current = dest;
+    }
+
+    return onStarting;
+}
+
+function calcTotalPressureReleased(graph, valves, onAtTime) {
+    let sum = 0;
+
+    for (let i = 0; i<valves.length; i++) {
+        const valve = graph.get(valves[i]);
+        const t = onAtTime[i];
+
+        sum += valve.rate * (30 - t);
+    }
+
+    return sum;
 }
 
 console.log(solve('day16/input-sample.txt'));
